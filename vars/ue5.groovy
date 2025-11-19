@@ -18,25 +18,48 @@ def buildBlueprintProject(engineRoot, projectName, project, config, platform, ou
 {
    init(engineRoot, projectName, project)
    
-   // Only package since we have a blueprintOnly project
-   bat(label: "Package UE5 project", script: "\"${ue5Info.engineRoot}\\Build\\BatchFiles\\RunUAT.bat\" BuildCookRun -Project=\"${ue5Info.project}\" -NoP4 -Distribution -TargetPlatform=${platform} -Platform=${platform} -ClientConfig=${config} -ServerConfig=${config} -Cook -Allmaps -Build -Stage -Pak -Archive -Archivedirectory=\"${outputDir}\" -Rocket -Prereqs -Package")
-   
+   if (isUnix())
+   {
+      // Only package since we have a blueprintOnly project
+      sh(label: "Package UE5 project", script: "\"${ue5Info.engineRoot}/Build/BatchFiles/RunUAT.sh\" BuildCookRun -Project=\"${ue5Info.project}\" -NoP4 -Distribution -TargetPlatform=${platform} -Platform=${platform} -ClientConfig=${config} -ServerConfig=${config} -Cook -Allmaps -Build -Stage -Pak -Archive -Archivedirectory=\"${outputDir}\" -Rocket -Prereqs -Package")
+   }
+   else
+   {
+      // Only package since we have a blueprintOnly project
+      bat(label: "Package UE5 project", script: "\"${ue5Info.engineRoot}\\Build\\BatchFiles\\RunUAT.bat\" BuildCookRun -Project=\"${ue5Info.project}\" -NoP4 -Distribution -TargetPlatform=${platform} -Platform=${platform} -ClientConfig=${config} -ServerConfig=${config} -Cook -Allmaps -Build -Stage -Pak -Archive -Archivedirectory=\"${outputDir}\" -Rocket -Prereqs -Package")
+   }
 }
 
 def buildPrecompiledProject(engineRoot, projectName, project, config, platform, outputDir, logFile = "${env.WORKSPACE}\\Logs\\UE5Build-${env.BUILD_NUMBER}.txt")
 {
    init(engineRoot, projectName, project)
    
-   // Package
-   bat(label: "Package UE5 project", script: "\"${ue5Info.engineRoot}\\Build\\BatchFiles\\RunUAT.bat\" BuildCookRun -Project=\"${ue5Info.project}\" -NoP4 -nocompileeditor -skipbuildeditor -TargetPlatform=${platform} -Platform=${platform} -ClientConfig=${config} -Cook -Build -Stage -Pak -Archive -Archivedirectory=\"${outputDir}\" -Rocket -Prereqs -iostore -compressed -Package -nocompile -nocompileuat")
+   if (isUnix())
+   {
+      // Package
+      sh(label: "Package UE5 project", script: "\"${ue5Info.engineRoot}/Build/BatchFiles/RunUAT.sh\" BuildCookRun -Project=\"${ue5Info.project}\" -NoP4 -nocompileeditor -skipbuildeditor -TargetPlatform=${platform} -Platform=${platform} -ClientConfig=${config} -Cook -Build -Stage -Pak -Archive -Archivedirectory=\"${outputDir}\" -Rocket -Prereqs -iostore -compressed -Package -nocompile -nocompileuat")
+   }
+   else
+   {
+      // Package
+      bat(label: "Package UE5 project", script: "\"${ue5Info.engineRoot}\\Build\\BatchFiles\\RunUAT.bat\" BuildCookRun -Project=\"${ue5Info.project}\" -NoP4 -nocompileeditor -skipbuildeditor -TargetPlatform=${platform} -Platform=${platform} -ClientConfig=${config} -Cook -Build -Stage -Pak -Archive -Archivedirectory=\"${outputDir}\" -Rocket -Prereqs -iostore -compressed -Package -nocompile -nocompileuat")
+   }
 }
 
 def buildCustomProject(engineRoot, projectName, project, config, platform, outputDir, customFlags = "-Cook -Allmaps -Build -Stage -Pak -Rocket -Prereqs -Package -crashreporter", logFile = "${env.WORKSPACE}\\Logs\\UE5Build-${env.BUILD_NUMBER}.txt")
 {
    init(engineRoot, projectName, project)
    
-   // Package
-   bat(label: "Package UE5 project", script: "\"${ue5Info.engineRoot}\\Build\\BatchFiles\\RunUAT.bat\" BuildCookRun -Project=\"${ue5Info.project}\" -NoP4 -Distribution -TargetPlatform=${platform} -Platform=${platform} -ClientConfig=${config} -ServerConfig=${config} -Archive -Archivedirectory=\"${outputDir}\" ${customFlags}")
+   if (isUnix())
+   {
+      // Package
+      sh(label: "Package UE5 project", script: "\"${ue5Info.engineRoot}/Build/BatchFiles/RunUAT.sh\" BuildCookRun -Project=\"${ue5Info.project}\" -NoP4 -Distribution -TargetPlatform=${platform} -Platform=${platform} -ClientConfig=${config} -ServerConfig=${config} -Archive -Archivedirectory=\"${outputDir}\" ${customFlags}")
+   }
+   else
+   {
+      // Package
+      bat(label: "Package UE5 project", script: "\"${ue5Info.engineRoot}\\Build\\BatchFiles\\RunUAT.bat\" BuildCookRun -Project=\"${ue5Info.project}\" -NoP4 -Distribution -TargetPlatform=${platform} -Platform=${platform} -ClientConfig=${config} -ServerConfig=${config} -Archive -Archivedirectory=\"${outputDir}\" ${customFlags}")
+   }
 }
 
 def runAllTests(config = "Development", platform = "Win64")
