@@ -120,7 +120,7 @@ def createMessage(title, messageColor, fields, footer = null, content = null)
       body.content = content
    }
 
-   return JsonOutput.toJson(body).replace('"','""')
+   return JsonOutput.toJson(body).replace('"','\"')
 }
 
 def sendMessage(message, webhook)
