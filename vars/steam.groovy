@@ -79,12 +79,26 @@ def deploy(appManifest, steamGuard = null)
         if (steamGuard)
         {
            log("Deploy called with steamGuard provided")
-           sh(label: "Deploy to Steam with SteamGuard", script: "\"${steamInfo.steamCmd}\" +login %STEAMUSER% %STEAMPASS%  \"${steamGuard}\" +run_app_build_http \"${appManifest}\" +quit")
+           if (isUnix())
+           {
+               sh(label: "Deploy to Steam with SteamGuard", script: "\"${steamInfo.steamCmd}\" +login $STEAMUSER $STEAMPASS \"${steamGuard}\" +run_app_build_http \"${appManifest}\" +quit")
+           }
+           else
+           {
+               bat(label: "Deploy to Steam with SteamGuard", script: "\"${steamInfo.steamCmd}\" +login %STEAMUSER% %STEAMPASS% \"${steamGuard}\" +run_app_build_http \"${appManifest}\" +quit")
+           }
         } 
         else 
         {
            log("Deploy called with no steamGuard provided")
-           sh(label: "Deploy to Steam without SteamGuard", script: "\"${steamInfo.steamCmd}\" +login %STEAMUSER% +run_app_build_http \"${appManifest}\" +quit")
+           if (isUnix())
+           {
+               sh(label: "Deploy to Steam without SteamGuard", script: "\"${steamInfo.steamCmd}\" +login $STEAMUSER +run_app_build_http \"${appManifest}\" +quit")
+           }
+           else
+           {
+               bat(label: "Deploy to Steam without SteamGuard", script: "\"${steamInfo.steamCmd}\" +login %STEAMUSER% +run_app_build_http \"${appManifest}\" +quit")
+           }
         }
     }
 }
